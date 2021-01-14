@@ -144,9 +144,9 @@ public class LoginController extends AppContext {
 					stage.setHeight(s.getHeight());
 
 					if (storeDetails != null) {
-						stage.setTitle("My Store - " + storeDetails.getStoreName());
+						stage.setTitle("Tele-Distributor - " + storeDetails.getStoreName());
 					} else {
-						stage.setTitle("My Store");
+						stage.setTitle("Tele-Distributor");
 					}
 					stage.setMaximized(true);
 					stage.show();

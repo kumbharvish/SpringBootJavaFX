@@ -29,7 +29,7 @@ public class AboutUsController implements TabContent {
     
     private static final String EMAIL_ID = "Kumbharvish@gmail.com";
     
-    private static final String MY_STORE ="TeleDistributor";
+    private static final String MY_STORE ="Tele-Distributor";
     
     private static final String COPYRIGHT ="Copyright "+"\u00a9"+" 2017";
     
