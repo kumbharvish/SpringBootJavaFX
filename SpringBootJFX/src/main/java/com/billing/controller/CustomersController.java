@@ -101,6 +101,15 @@ public class CustomersController extends AppContext implements TabContent {
 	private TextField txtBalanceAmount;
 
 	@FXML
+	private TextField txtAddress;
+
+	@FXML
+	private TextField txtState;
+
+	@FXML
+	private TextField txtGstin;
+
+	@FXML
 	private Button btnAdd;
 
 	@FXML
@@ -135,6 +144,15 @@ public class CustomersController extends AppContext implements TabContent {
 
 	@FXML
 	private TableColumn<Customer, Double> tcPendingAmount;
+
+	@FXML
+	private TableColumn<Customer, String> tcState;
+
+	@FXML
+	private TableColumn<Customer, String> tcGstin;
+
+	@FXML
+	private TableColumn<Customer, String> tcAddress;
 
 	@FXML
 	void onASettleUpCommand(ActionEvent event) {
@@ -217,12 +235,18 @@ public class CustomersController extends AppContext implements TabContent {
 		tcName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustName()));
 		tcCity.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustCity()));
 		tcEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCustEmail()));
+		tcGstin.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGstin()));
+		tcAddress.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAddress()));
+		tcState.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getState()));
 		tcPendingAmount.setCellFactory(callback);
 		// Set CSS
 		tcMobileNo.getStyleClass().add("numeric-cell");
 		tcName.getStyleClass().add("character-cell");
 		tcCity.getStyleClass().add("character-cell");
 		tcEmail.getStyleClass().add("character-cell");
+		tcAddress.getStyleClass().add("character-cell");
+		tcState.getStyleClass().add("character-cell");
+		tcGstin.getStyleClass().add("character-cell");
 	}
 
 	public void onSelectedRowChanged(ObservableValue<? extends Customer> observable, Customer oldValue,
@@ -239,6 +263,9 @@ public class CustomersController extends AppContext implements TabContent {
 		txtCustName.setText(customer.getCustName());
 		txtCity.setText(customer.getCustCity());
 		txtEmail.setText(customer.getCustEmail());
+		txtState.setText(customer.getState());
+		txtAddress.setText(customer.getAddress());
+		txtGstin.setText(customer.getGstin());
 		txtBalanceAmount.setText(IndianCurrencyFormatting.applyFormattingWithCurrency(customer.getBalanceAmt()));
 	}
 
@@ -337,11 +364,7 @@ public class CustomersController extends AppContext implements TabContent {
 
 	@Override
 	public boolean saveData() {
-		Customer customer = new Customer();
-		customer.setCustMobileNumber(Long.valueOf(txtMobileNo.getText()));
-		customer.setCustName(txtCustName.getText());
-		customer.setCustCity(txtCity.getText());
-		customer.setCustEmail(txtEmail.getText());
+		Customer customer = getCustomerDetails();
 		StatusDTO status = customerService.add(customer);
 		if (status.getStatusCode() == 0) {
 			alertHelper.showSuccessNotification("Customer added successfully");
@@ -358,13 +381,20 @@ public class CustomersController extends AppContext implements TabContent {
 		return true;
 	}
 
-	private void updateData() {
+	private Customer getCustomerDetails() {
 		Customer customer = new Customer();
 		customer.setCustMobileNumber(Long.valueOf(txtMobileNo.getText()));
 		customer.setCustName(txtCustName.getText());
 		customer.setCustCity(txtCity.getText());
 		customer.setCustEmail(txtEmail.getText());
+		customer.setState(txtState.getText());
+		customer.setAddress(txtAddress.getText());
+		customer.setGstin(txtGstin.getText());
+		return customer;
+	}
 
+	private void updateData() {
+		Customer customer = getCustomerDetails();
 		StatusDTO status = customerService.update(customer);
 		if (status.getStatusCode() == 0) {
 			alertHelper.showSuccessNotification("Customer updated successfully");
@@ -424,6 +454,9 @@ public class CustomersController extends AppContext implements TabContent {
 		lblCustNameErrMsg.setText("");
 		lblMobileNoErrMsg.setText("");
 		txtBalanceAmount.setText("");
+		txtState.setText("");
+		txtGstin.setText("");
+		txtAddress.setText("");
 	}
 
 	private void getPopup(Customer customer, String type) {

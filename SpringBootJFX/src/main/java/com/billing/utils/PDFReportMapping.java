@@ -71,6 +71,10 @@ public class PDFReportMapping {
 			map.put("TotalAmountForCashInvoice", IndianCurrencyFormatting.applyFormatting(totalAmtForCashInvice));
 			map.put("CustomerName", bill.getCustomerName());
 			map.put("CustomerMobileNo", String.valueOf(bill.getCustomerMobileNo()));
+			map.put("CustomerAddress", String.valueOf(bill.getCustomer().getAddress()));
+			map.put("CustomerState", String.valueOf(bill.getCustomer().getState()));
+			map.put("CustomerCity", String.valueOf(bill.getCustomer().getCustCity()));
+			map.put("CustomerGstin", String.valueOf(bill.getCustomer().getGstin()));
 			map.put("termsCondition", appUtils.getAppDataValues(AppConstants.TERMS_AND_CONDITION_FOR_INVOICE));
 			dataSourceMaps.add(map);
 		}

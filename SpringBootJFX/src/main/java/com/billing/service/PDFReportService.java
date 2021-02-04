@@ -193,6 +193,7 @@ public class PDFReportService {
 					details.getAddress2() + ", " + details.getCity() + ", " + details.getDistrict());
 			headerParamsMap.put("MobileNumber", String.valueOf(details.getMobileNo()));
 			headerParamsMap.put("State", details.getState());
+			headerParamsMap.put("GSTIN", details.getGstNo());
 		}
 
 		return headerParamsMap;

@@ -49,6 +49,8 @@ public class BillDetails {
 	private boolean isItemsEdited;
 	
 	private double profitAmount;
+	
+	private Customer customer;
 
 	public int getBillNumber() {
 		return billNumber;
@@ -232,5 +234,13 @@ public class BillDetails {
 
 	public void setProfitAmount(double profitAmount) {
 		this.profitAmount = profitAmount;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 }

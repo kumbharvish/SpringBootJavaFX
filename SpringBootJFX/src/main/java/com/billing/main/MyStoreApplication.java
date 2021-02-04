@@ -13,7 +13,6 @@ import com.billing.properties.AppProperties;
 import com.billing.service.AppLicenseService;
 import com.billing.service.DBBackupService;
 import com.billing.utils.AlertHelper;
-import com.billing.utils.AppUtils;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

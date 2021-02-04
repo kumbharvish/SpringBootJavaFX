@@ -28,7 +28,6 @@ public class CustomerService implements AppService<Customer> {
 	@Override
 	public StatusDTO delete(Customer customer) {
 		return customerRepository.deleteCustomer(customer.getCustMobileNumber());
-
 	}
 
 	@Override

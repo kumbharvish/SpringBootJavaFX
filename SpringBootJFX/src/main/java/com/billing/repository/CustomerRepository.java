@@ -50,8 +50,8 @@ public class CustomerRepository {
 
 	private static final String GET_ALL_CUSTOMERS = "SELECT * FROM CUSTOMER_DETAILS";
 
-	private static final String INS_CUSTOMER = "INSERT INTO CUSTOMER_DETAILS (CUST_MOB_NO,CUST_NAME,CUST_EMAIL,CUST_CITY,ENTRY_DATE,LAST_UPDATE) "
-			+ "VALUES(?,?,?,?,?,?)";
+	private static final String INS_CUSTOMER = "INSERT INTO CUSTOMER_DETAILS (CUST_MOB_NO,CUST_NAME,CUST_EMAIL,CUST_CITY,ENTRY_DATE,LAST_UPDATE,GSTIN,ADDRESS,STATE) "
+			+ "VALUES(?,?,?,?,?,?,?,?,?)";
 
 	private static final String INS_CUSTOMER_PAY_HISTORY = "INSERT INTO CUSTOMER_PAYMENT_HISTORY (CUST_MOB_NO,TIMESTAMP,AMOUNT,STATUS,NARRATION,CREDIT,DEBIT) "
 			+ "VALUES(?,?,?,?,?,?,?)";
@@ -62,7 +62,7 @@ public class CustomerRepository {
 
 	private static final String DELETE_CUSTOMER = "DELETE FROM  CUSTOMER_DETAILS WHERE CUST_MOB_NO=? ";
 
-	private static final String UPDATE_CUSTOMER = "UPDATE CUSTOMER_DETAILS SET CUST_NAME=?,CUST_EMAIL=?,CUST_CITY=?,LAST_UPDATE=? WHERE "
+	private static final String UPDATE_CUSTOMER = "UPDATE CUSTOMER_DETAILS SET CUST_NAME=?,CUST_EMAIL=?,CUST_CITY=?,LAST_UPDATE=?,GSTIN=?,ADDRESS=?,STATE=? WHERE "
 			+ "CUST_MOB_NO=?";
 
 	public UserDetails validateUser(String userName, String password) {
@@ -224,6 +224,9 @@ public class CustomerRepository {
 				customer.setCustEmail(rs.getString("CUST_EMAIL"));
 				customer.setEntryDate(rs.getString("ENTRY_DATE"));
 				customer.setLastUpdateDate(rs.getString("LAST_UPDATE"));
+				customer.setGstin(rs.getString("GSTIN"));
+				customer.setAddress(rs.getString("ADDRESS"));
+				customer.setState(rs.getString("STATE"));
 			}
 			rs.close();
 		} catch (Exception e) {
@@ -248,6 +251,9 @@ public class CustomerRepository {
 			stmt.setString(4, customer.getCustCity());
 			stmt.setString(5, appUtils.getCurrentTimestamp());
 			stmt.setString(6, appUtils.getCurrentTimestamp());
+			stmt.setString(7, customer.getGstin());
+			stmt.setString(8, customer.getAddress());
+			stmt.setString(9, customer.getState());
 
 			int records = stmt.executeUpdate();
 
@@ -348,7 +354,10 @@ public class CustomerRepository {
 			stmt.setString(2, customer.getCustEmail());
 			stmt.setString(3, customer.getCustCity());
 			stmt.setString(4, appUtils.getCurrentTimestamp());
-			stmt.setLong(5, customer.getCustMobileNumber());
+			stmt.setString(5, customer.getGstin());
+			stmt.setString(6, customer.getAddress());
+			stmt.setString(7, customer.getState());
+			stmt.setLong(8, customer.getCustMobileNumber());
 
 			int records = stmt.executeUpdate();
 
@@ -387,7 +396,9 @@ public class CustomerRepository {
 				customer.setCustEmail(rs.getString("CUST_EMAIL"));
 				customer.setEntryDate(rs.getString("ENTRY_DATE"));
 				customer.setLastUpdateDate(rs.getString("LAST_UPDATE"));
-
+				customer.setGstin(rs.getString("GSTIN"));
+				customer.setAddress(rs.getString("ADDRESS"));
+				customer.setState(rs.getString("STATE"));
 				customerList.add(customer);
 			}
 			rs.close();
@@ -420,6 +431,9 @@ public class CustomerRepository {
 				customer.setCustEmail(rs.getString("CUST_EMAIL"));
 				customer.setEntryDate(rs.getString("ENTRY_DATE"));
 				customer.setLastUpdateDate(rs.getString("LAST_UPDATE"));
+				customer.setGstin(rs.getString("GSTIN"));
+				customer.setAddress(rs.getString("ADDRESS"));
+				customer.setState(rs.getString("STATE"));
 
 				customerList.add(customer);
 				Comparator<Customer> cp = Customer.getComparator(Customer.SortParameter.CUST_BALANCE_DESCENDING);

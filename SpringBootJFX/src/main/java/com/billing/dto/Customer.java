@@ -14,6 +14,33 @@ public class Customer {
 	private String entryDate;
 	private String lastUpdateDate;
 	private String narration;
+	private String gstin;
+	private String address;
+	private String state;
+
+	public String getGstin() {
+		return gstin;
+	}
+
+	public void setGstin(String gstin) {
+		this.gstin = gstin;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
 
 	public String getCustName() {
 		return custName;

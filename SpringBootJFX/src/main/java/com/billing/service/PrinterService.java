@@ -50,6 +50,9 @@ public class PrinterService {
 	ExcelReportService excelReportService;
 
 	@Autowired
+	CustomerService customerService;
+
+	@Autowired
 	DBUtils dbUtils;
 
 	@Autowired
@@ -122,7 +125,9 @@ public class PrinterService {
 
 	// Print Invoice
 	public void printInvoice(BillDetails bill) {
-
+		if (bill.getCustomer() == null) {
+			bill.setCustomer(customerService.getCustomer(bill.getCustomerMobileNo()));
+		}
 		PrintTemplate template = getDefaultPrintTemplate();
 
 		if (null != template) {
