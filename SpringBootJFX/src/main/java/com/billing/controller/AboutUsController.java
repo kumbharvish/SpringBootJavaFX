@@ -23,9 +23,9 @@ public class AboutUsController implements TabContent {
     
     private String version = "(1.0.0)";
     
-    private static final String DEVELOPED_BY = "Vishal Kumbhar / Adhir Shishupal ";
+    private static final String DEVELOPED_BY = "Vishal Kumbhar";
     
-    private static final String MOBILE = "+91 8149880299 / +91 9579616107";
+    private static final String MOBILE = "+91 8149880299";
     
     private static final String EMAIL_ID = "Kumbharvish@gmail.com";
     
