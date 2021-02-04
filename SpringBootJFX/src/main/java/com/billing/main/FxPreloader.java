@@ -25,7 +25,7 @@ public class FxPreloader extends Preloader{
 	private Pane splashLayout;
 	private ProgressBar loadProgress;
 	private Label progressText;
-	private static final int SPLASH_WIDTH = 590;
+	private static final int SPLASH_WIDTH = 840;
 	private static final int SPLASH_HEIGHT = 106;
 	
 	@Override
