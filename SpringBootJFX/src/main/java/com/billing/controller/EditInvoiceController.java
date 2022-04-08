@@ -254,6 +254,7 @@ public class EditInvoiceController extends AppContext implements TabContent {
 			txtGstType.setText("Inclusive");
 		} else {
 			txtGstType.setText("Exclusive");
+			isGSTInclusive = false;
 		}
 		
 		if ("N".equalsIgnoreCase(appUtils.getAppDataValues(AppConstants.ALLOW_RATE_CHANGE_IN_INVOICE))) {
