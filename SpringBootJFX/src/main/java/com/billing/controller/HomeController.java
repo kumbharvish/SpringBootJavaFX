@@ -74,8 +74,6 @@ public class HomeController extends AppContext {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-	private final static String INVOICE_VIEW_FILE_NAME = "Invoice";
-
 	@FXML
 	private Label lblSupportEmail;
 
