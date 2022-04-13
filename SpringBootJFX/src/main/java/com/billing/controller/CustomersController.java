@@ -29,6 +29,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -49,6 +50,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -374,7 +376,69 @@ public class CustomersController extends AppContext implements TabContent {
 		KeyCombination kr = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_ANY);
 		Runnable rr = () -> onResetCommand(null);
 		currentStage.getScene().getAccelerators().put(kr, rr);
+		setEnterButtonRules();
 		return true;
+	}
+
+	private void setEnterButtonRules() {
+		// Mobile No
+		txtMobileNo.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (!txtMobileNo.getText().equals("") && ke.getCode().equals(KeyCode.ENTER)) {
+					txtCustName.requestFocus();
+				}
+			}
+		});
+		txtCustName.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (!txtCustName.getText().equals("") && ke.getCode().equals(KeyCode.ENTER)) {
+					txtAddress.requestFocus();
+				}
+			}
+		});
+		txtAddress.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					txtCity.requestFocus();
+				}
+			}
+		});
+		txtCity.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					txtState.requestFocus();
+				}
+			}
+		});
+		txtState.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					txtEmail.requestFocus();
+				}
+			}
+		});
+		txtEmail.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					txtGstin.requestFocus();
+				}
+			}
+		});
+		txtGstin.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					btnAdd.requestFocus();
+				}
+			}
+		});
+
 	}
 
 	@Override

@@ -69,7 +69,7 @@
 
 										<ButtonBar GridPane.columnSpan="2" GridPane.rowIndex="8">
 											<buttons>
-												<Button fx:id="btnAdd" defaultButton="true" mnemonicParsing="true" onAction="#onAddCommand" text="Add" />
+												<Button fx:id="btnAdd" defaultButton="false" mnemonicParsing="true" onAction="#onAddCommand" text="Add" />
 												<Button fx:id="btnUpdate" cancelButton="true" mnemonicParsing="true" onAction="#onUpdateCommand" text="Update" />
 												<Button fx:id="btnDelete" mnemonicParsing="false" onAction="#onDeleteCommand" text="Delete" />
 												<Button fx:id="btnReset" mnemonicParsing="false" onAction="#onResetCommand" text="Reset" />
