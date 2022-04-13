@@ -19,6 +19,8 @@ public class GSTDetails {
 	private double cgstPercent;
 
 	private double sgstPercent;
+	
+	private double totalItemAmount;
 
 	public String getName() {
 		return name;
@@ -82,5 +84,13 @@ public class GSTDetails {
 
 	public double getSgstPercent() {
 		return rate/2;
+	}
+
+	public double getTotalItemAmount() {
+		return totalItemAmount;
+	}
+
+	public void setTotalItemAmount(double totalItemAmount) {
+		this.totalItemAmount = totalItemAmount;
 	}
 }

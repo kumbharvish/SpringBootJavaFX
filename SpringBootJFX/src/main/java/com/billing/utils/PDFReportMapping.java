@@ -78,6 +78,7 @@ public class PDFReportMapping {
 			map.put("CustomerCity", String.valueOf(bill.getCustomer().getCustCity()));
 			map.put("CustomerGstin", String.valueOf(bill.getCustomer().getGstin()));
 			map.put("termsCondition", appUtils.getAppDataValues(AppConstants.TERMS_AND_CONDITION_FOR_INVOICE));
+			map.put("SubTotalAmountTH", IndianCurrencyFormatting.applyFormatting(bill.getTotalAmount() + bill.getGstAmount()));
 			dataSourceMaps.add(map);
 		}
 
@@ -108,7 +109,8 @@ public class PDFReportMapping {
 			String jasperName) {
 		List<Map<String, ?>> dataSourceMapsSubReport = new ArrayList<Map<String, ?>>();
 		HashMap<String, Double> dataMap = new LinkedHashMap<>();
-
+		HashMap<String, GSTDetails> dataMapGST = new LinkedHashMap<>();
+		
 		if (AppConstants.IT_A4_TAX_3.equalsIgnoreCase(jasperName)
 				|| AppConstants.IT_A4_TAX_5.equalsIgnoreCase(jasperName)) {
 			Map<String, Object> subreportMap = new HashMap<String, Object>();
@@ -127,37 +129,90 @@ public class PDFReportMapping {
 			dataSourceMapsSubReport.add(subreportMap);
 
 		} else {
-			for (ItemDetails item : bill.getItemDetails()) {
-				GSTDetails gst = item.getGstDetails();
-				String keySgst = "SGST@" + gst.getSgstPercent() + "%";
-				String keyCgst = "CGST@" + gst.getCgstPercent() + "%";
-				// SGST
-				if (dataMap.containsKey(keySgst)) {
-					Double amount = dataMap.get(keySgst);
-					dataMap.put(keySgst, gst.getSgst() + amount);
-				} else {
-					dataMap.put(keySgst, gst.getSgst());
+			if (jasperName.contains("_TH_")) {
+				for (ItemDetails item : bill.getItemDetails()) {
+					GSTDetails gst = item.getGstDetails();
+					GSTDetails gstNew = new GSTDetails();
+					gstNew.setRate(gst.getRate());
+					String rate = String.valueOf(gst.getRate()).replace(".0", "");
+					if (dataMapGST.containsKey(rate)) {
+						GSTDetails gstNewDetails = dataMapGST.get(rate);
+						gstNewDetails.setGstAmount(gst.getGstAmount() + gstNewDetails.getGstAmount());
+						gstNewDetails.setCgst(gst.getCgst()+gstNewDetails.getCgst());
+						gstNewDetails.setSgst(gst.getSgst()+gstNewDetails.getSgst());
+						gstNewDetails.setTaxableAmount(gst.getTaxableAmount()+ gstNewDetails.getTaxableAmount());
+						gstNewDetails.setTotalItemAmount(gstNewDetails.getTotalItemAmount() + gst.getTaxableAmount() + gst.getGstAmount());
+						dataMapGST.put(rate, gstNewDetails);
+					} else {
+						gstNew.setGstAmount(gst.getGstAmount());
+						gstNew.setCgst(gst.getCgst());
+						gstNew.setSgst(gst.getSgst());
+						gstNew.setTaxableAmount(gst.getTaxableAmount());
+						gstNew.setTotalItemAmount(gst.getTaxableAmount() + gst.getGstAmount());
+						dataMapGST.put(rate, gstNew);
+					}
 				}
-				// CGST
-				if (dataMap.containsKey(keyCgst)) {
-					Double amount = dataMap.get(keyCgst);
-					dataMap.put(keyCgst, gst.getCgst() + amount);
-				} else {
-					dataMap.put(keyCgst, gst.getCgst());
+				double totalTaxableAmt = 0;
+				double totalCgst = 0;
+				double totalSgst = 0;
+				double totalItemAmount = 0;
+				for (String rate : dataMapGST.keySet()) {
+					Map<String, Object> subreportMap = new HashMap<String, Object>();
+					subreportMap.put("gstRate", rate);
+					GSTDetails gst = dataMapGST.get(rate);
+					totalTaxableAmt = totalTaxableAmt + gst.getTaxableAmount();
+					totalCgst = totalCgst + gst.getCgst();
+					totalSgst = totalSgst + gst.getSgst();
+					totalItemAmount = totalItemAmount + gst.getTotalItemAmount();
+					subreportMap.put("taxableAmount", appUtils.getDecimalFormat(gst.getTaxableAmount()));
+					subreportMap.put("cgst", appUtils.getDecimalFormat(gst.getCgst()));
+					subreportMap.put("sgst", appUtils.getDecimalFormat(gst.getSgst()));
+					subreportMap.put("totalItemAmount", appUtils.getDecimalFormat(gst.getTotalItemAmount()));
+					subreportMap.put("netSalesAmount", IndianCurrencyFormatting.applyFormatting(bill.getNetSalesAmt()));
+					subreportMap.put("subTotalAmount", IndianCurrencyFormatting.applyFormatting(bill.getTotalAmount()));
+					subreportMap.put("storeName", headersMap.get("StoreName"));
+					subreportMap.put("discountAmount", IndianCurrencyFormatting.applyFormatting(bill.getDiscountAmt()));
+					subreportMap.put("discountPer", appUtils.getPercentValueForReport(bill.getDiscount()));
+					subreportMap.put("termsCondition", appUtils.getAppDataValues(AppConstants.TERMS_AND_CONDITION_FOR_INVOICE));
+					subreportMap.put("totalTaxableAmt", IndianCurrencyFormatting.applyFormatting(totalTaxableAmt));
+					subreportMap.put("totalCgst", IndianCurrencyFormatting.applyFormatting(totalCgst));
+					subreportMap.put("totalSgst", IndianCurrencyFormatting.applyFormatting(totalSgst));
+					subreportMap.put("totalAmount", IndianCurrencyFormatting.applyFormatting(totalItemAmount));
+					dataSourceMapsSubReport.add(subreportMap);
+				}
+			} else {
+				for (ItemDetails item : bill.getItemDetails()) {
+					GSTDetails gst = item.getGstDetails();
+					String keySgst = "SGST@" + gst.getSgstPercent() + "%";
+					String keyCgst = "CGST@" + gst.getCgstPercent() + "%";
+					// SGST
+					if (dataMap.containsKey(keySgst)) {
+						Double amount = dataMap.get(keySgst);
+						dataMap.put(keySgst, gst.getSgst() + amount);
+					} else {
+						dataMap.put(keySgst, gst.getSgst());
+					}
+					// CGST
+					if (dataMap.containsKey(keyCgst)) {
+						Double amount = dataMap.get(keyCgst);
+						dataMap.put(keyCgst, gst.getCgst() + amount);
+					} else {
+						dataMap.put(keyCgst, gst.getCgst());
+					}
+				}
+				for (String rate : dataMap.keySet()) {
+					Map<String, Object> subreportMap = new HashMap<String, Object>();
+					subreportMap.put("gstRate", rate);
+					subreportMap.put("gstAmount", appUtils.getDecimalFormat(dataMap.get(rate)));
+					subreportMap.put("netSalesAmount", IndianCurrencyFormatting.applyFormatting(bill.getNetSalesAmt()));
+					subreportMap.put("subTotalAmount", IndianCurrencyFormatting.applyFormatting(bill.getTotalAmount()));
+					subreportMap.put("storeName", headersMap.get("StoreName"));
+					subreportMap.put("discountAmount", IndianCurrencyFormatting.applyFormatting(bill.getDiscountAmt()));
+					subreportMap.put("discountPer", appUtils.getPercentValueForReport(bill.getDiscount()));
+					dataSourceMapsSubReport.add(subreportMap);
 				}
 			}
-
-			for (String rate : dataMap.keySet()) {
-				Map<String, Object> subreportMap = new HashMap<String, Object>();
-				subreportMap.put("gstRate", rate);
-				subreportMap.put("gstAmount", appUtils.getDecimalFormat(dataMap.get(rate)));
-				subreportMap.put("netSalesAmount", IndianCurrencyFormatting.applyFormatting(bill.getNetSalesAmt()));
-				subreportMap.put("subTotalAmount", IndianCurrencyFormatting.applyFormatting(bill.getTotalAmount()));
-				subreportMap.put("storeName", headersMap.get("StoreName"));
-				subreportMap.put("discountAmount", IndianCurrencyFormatting.applyFormatting(bill.getDiscountAmt()));
-				subreportMap.put("discountPer", appUtils.getPercentValueForReport(bill.getDiscount()));
-				dataSourceMapsSubReport.add(subreportMap);
-			}
+			
 		}
 		return dataSourceMapsSubReport;
 	}
