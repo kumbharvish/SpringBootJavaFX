@@ -31,3 +31,4 @@ build/
 .vscode/
 /Data_Backup
 /log
+/bin

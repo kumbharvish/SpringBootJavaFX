@@ -110,6 +110,8 @@ public class AppProperties {
 	
 	public void updateLicenseKey(String key) throws Exception {
 		String date = appUtils.dec(key);
+		SimpleDateFormat sdfParseFormat = new SimpleDateFormat("dd MMM yyyy");
+		Date expriyDate = sdfParseFormat.parse(date);
 		StatusDTO status = appUtils.updateAppData("APP_SECURE_KEY", key);
 		if(status.getStatusCode()==0) {
 			alertHelper.showInfoAlert(null, "Success", "License Updated", AppConstants.LICENSE_UPDATED+date+" Please reopen the MyStore application");
